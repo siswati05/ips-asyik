@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPS Fun Classroom - Media Pembelajaran IPS SMP Kelas 7 & 8</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#4f46e5',
+                            600: '#4338ca',
+                            700: '#3730a3',
+                        },
+                        secondary: {
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        },
+                        accent: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Custom untuk Efek Kartu Flashcard Flip */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .animate-bounce-short {
+            animation: bounce 1s infinite alternate;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Brand Name -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('tentang')">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-secondary-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 transform hover:scale-105 transition-all">
+                        <i class="fa-solid fa-earth-americas text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold bg-gradient-to-r from-brand-600 to-secondary-600 bg-clip-text text-transparent">IPS Fun Digital</span>
+                        <span class="block text-xs font-semibold text-slate-400 tracking-wider">SMP KELAS 7 & 8</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/60">
+                    <button onclick="switchTab('tentang')" id="nav-tentang" class="nav-btn px-4 py-2 text-sm font-bold rounded-xl transition-all flex items-center gap-2 bg-white text-brand-600 shadow-sm">
+                        <i class="fa-solid fa-house"></i> Tentang
+                    </button>
+                    <button onclick="switchTab('materi')" id="nav-materi" class="nav-btn px-4 py-2 text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-brand-600 hover:bg-white/50 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> Materi
+                    </button>
+                    <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn px-4 py-2 text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-brand-600 hover:bg-white/50 flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad"></i> Quiz Interaktif
+                    </button>
+                    <button onclick="switchTab('bantuan')" id="nav-bantuan" class="nav-btn px-4 py-2 text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-brand-600 hover:bg-white/50 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question"></i> Bantuan
+                    </button>
+                </nav>
+
+                <!-- Action Buttons: Student Stats & Admin Portal -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-amber-700 text-xs font-bold">
+                        <i class="fa-solid fa-trophy text-amber-500 text-sm"></i>
+                        <span id="user-points">0 Poin</span>
+                    </div>
+                    <button onclick="openAdminModal()" class="px-4 py-2 text-sm font-bold bg-slate-900 text-white hover:bg-brand-600 rounded-xl shadow-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear"></i> Portal Guru
+                    </button>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars-staggered" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl">
+            <button onclick="switchTab('tentang'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center gap-3 text-slate-700 hover:bg-brand-50 hover:text-brand-600">
+                <i class="fa-solid fa-house w-6 text-center text-brand-500"></i> Tentang Web
+            </button>
+            <button onclick="switchTab('materi'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center gap-3 text-slate-700 hover:bg-brand-50 hover:text-brand-600">
+                <i class="fa-solid fa-book-open w-6 text-center text-brand-500"></i> Materi Pembelajaran
+            </button>
+            <button onclick="switchTab('quiz'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center gap-3 text-slate-700 hover:bg-brand-50 hover:text-brand-600">
+                <i class="fa-solid fa-gamepad w-6 text-center text-brand-500"></i> Quiz Interaktif
+            </button>
+            <button onclick="switchTab('bantuan'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center gap-3 text-slate-700 hover:bg-brand-50 hover:text-brand-600">
+                <i class="fa-solid fa-circle-question w-6 text-center text-brand-500"></i> Bantuan & FAQ
+            </button>
+            <button onclick="openAdminModal(); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center gap-3 bg-slate-900 text-white">
+                <i class="fa-solid fa-user-gear w-6 text-center"></i> Portal Guru (Admin)
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SECTION 1: TENTANG (ABOUT / HERO) -->
+        <section id="sec-tentang" class="tab-content space-y-12 animate-fade-in">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-600 via-brand-500 to-secondary-600 text-white p-8 sm:p-12 shadow-2xl shadow-brand-500/20">
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute right-20 -top-20 w-60 h-60 bg-amber-400/20 rounded-full blur-xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-2xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold tracking-wide">
+                        <i class="fa-solid fa-sparkles text-amber-300"></i> Portal Pembelajaran Digital IPS SMP
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight">
+                        Jelajahi Dunia, Pahami Bangsa Bersama Seru!
+                    </h1>
+                    <p class="text-brand-100 text-base sm:text-lg leading-relaxed font-normal">
+                        Belajar Ilmu Pengetahuan Sosial kelas 7 & 8 jadi lebih asyik lewat video visual, infografis, flashcard interaktif, dan kuis berhadiah poin lencana!
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <button onclick="switchTab('materi')" class="px-6 py-3.5 bg-white text-brand-600 hover:bg-slate-100 font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-solid fa-compass"></i> Mulai Belajar Sekarang
+                        </button>
+                        <button onclick="switchTab('quiz')" class="px-6 py-3.5 bg-brand-700/60 hover:bg-brand-700 text-white border border-white/20 font-bold rounded-2xl backdrop-blur-md transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-300"></i> Coba Kuis Tantangan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile & Vision Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <!-- Teacher Profile Card -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-50 rounded-bl-full -z-0"></div>
+                    <div class="relative z-10 text-center space-y-4">
+                        <div class="relative inline-block">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300" alt="Guru IPS" class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-xl mx-auto" onerror="this.src='https://placehold.co/120x120/4f46e5/ffffff?text=Guru+IPS'">
+                            <span class="absolute bottom-1 right-1 bg-emerald-500 text-white p-1.5 rounded-full text-xs shadow" title="Pengajar Aktif">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800">Ibu Budiarti, S.Pd., M.Pd.</h3>
+                            <p class="text-sm font-semibold text-brand-600">Guru IPS Berpengalaman SMP</p>
+                        </div>
+                        <p class="text-sm text-slate-600 leading-relaxed italic bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            "Membawa ruang kelas tradisional ke era digital dengan pembelajaran visual yang kontekstual, menyenangkan, dan dekat dengan kehidupan anak muda SMP."
+                        </p>
+                        <div class="flex justify-center gap-3 pt-2 text-slate-400">
+                            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-semibold text-slate-600"> Pengalaman 10+ Thn</span>
+                            <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-semibold text-slate-600"> Sahabat Digital</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kurikulum & Fitur Platform -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                        <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                            <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-800">Capaian Pembelajaran IPS SMP</h2>
+                                <p class="text-xs text-slate-500">Mencakup Geografi, Sosiologi, Ekonomi, dan Sejarah</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 hover:border-brand-200 transition-all">
+                                <div class="flex items-center gap-2 text-brand-600 font-bold text-sm">
+                                    <i class="fa-solid fa-map-location-dot"></i> Keberagaman Ruang & Alam
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Memahami konektivitas antarruang, letak geografis Indonesia, dan dinamika kependudukan.</p>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 hover:border-brand-200 transition-all">
+                                <div class="flex items-center gap-2 text-secondary-600 font-bold text-sm">
+                                    <i class="fa-solid fa-users"></i> Interaksi Sosial & Budaya
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Menganalisis sosialisasi, keragaman budaya Nusantara, serta pluralitas masyarakat.</p>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 hover:border-brand-200 transition-all">
+                                <div class="flex items-center gap-2 text-emerald-600 font-bold text-sm">
+                                    <i class="fa-solid fa-coins"></i> Activity Ekonomi & Kelangkaan
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Mempelajari pemenuhan kebutuhan manusia, pasar digital, serta kegiatan ekonomi nasional.</p>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 hover:border-brand-200 transition-all">
+                                <div class="flex items-center gap-2 text-amber-600 font-bold text-sm">
+                                    <i class="fa-solid fa-landmark font-bold"></i> Perjuangan Sejarah Bangsa
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Menelusuri jejak peradaban kerajaan Nusantara hingga masa pergerakan nasional.</p>
+                            </div>
+                        </div>
+
+                        <!-- Highlights Media -->
+                        <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Format Pembelajaran Multimedia:</span>
+                            <div class="flex flex-wrap gap-2 text-xs font-semibold">
+                                <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full border border-red-100"><i class="fa-solid fa-video mr-1"></i> Video HD</span>
+                                <span class="px-3 py-1 bg-sky-50 text-sky-600 rounded-full border border-sky-100"><i class="fa-solid fa-image mr-1"></i> Infografis</span>
+                                <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100"><i class="fa-solid fa-clone mr-1"></i> Flashcard</span>
+                                <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-100"><i class="fa-solid fa-headphones mr-1"></i> Podcast Ringkas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: MATERI PEMBELAJARAN (CHAPTERS & MULTI-MEDIA) -->
+        <section id="sec-materi" class="tab-content hidden space-y-8 animate-fade-in">
+            <!-- Header Section & Class Filter -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-800">Modul & Bab IPS</h2>
+                    <p class="text-sm text-slate-500">Pilih jenjang kelas dan akses berbagai format media pembelajaran</p>
+                </div>
+
+                <!-- Toggle Filter Kelas 7 / 8 -->
+                <div class="inline-flex p-1.5 bg-slate-100 rounded-2xl border border-slate-200">
+                    <button id="btn-grade-7" onclick="filterGrade(7)" class="px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white text-brand-600 shadow-sm">
+                        Kelas 7 SMP
+                    </button>
+                    <button id="btn-grade-8" onclick="filterGrade(8)" class="px-5 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-brand-600">
+                        Kelas 8 SMP
+                    </button>
+                </div>
+            </div>
+
+            <!-- Material Search & Media Type Filter -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="relative md:col-span-2">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="material-search" oninput="renderMaterials()" placeholder="Cari judul bab, materi, atau kata kunci..." class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all">
+                </div>
+                <div>
+                    <select id="media-filter" onchange="renderMaterials()" class="w-full py-3 px-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium text-slate-700 focus:outline-none focus:border-brand-500">
+                        <option value="all"> Semua Format Media</option>
+                        <option value="video"> Format Video Pembelajaran</option>
+                        <option value="infographic"> Format Infografis / Mindmap</option>
+                        <option value="flashcard"> Format Flashcard Interaktif</option>
+                        <option value="audio"> Format Audio Podcast</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Material Grid Container -->
+            <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Javascript will dynamic render materials here -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: QUIZ INTERAKTIF -->
+        <section id="sec-quiz" class="tab-content hidden space-y-8 animate-fade-in">
+            <!-- Quiz Welcome / Category Selector -->
+            <div id="quiz-select-screen" class="space-y-6">
+                <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-accent-600 rounded-3xl p-8 text-white shadow-xl shadow-amber-500/10 relative overflow-hidden">
+                    <div class="relative z-10 space-y-3 max-w-2xl">
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                            <i class="fa-solid fa-bolt mr-1"></i> Zona Gamifikasi
+                        </span>
+                        <h2 class="text-3xl font-extrabold">Kuis Tantangan IPS Interaktif</h2>
+                        <p class="text-amber-100 text-sm leading-relaxed">
+                            Uji pemahamanmu dari materi Kelas 7 & 8. Dapatkan poin bintang, tingkatkan lencana prestasimu, dan jadilah Master IPS!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Category Card Kelas 7 -->
+                    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:border-brand-300 transition-all space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 bg-brand-50 text-brand-600 font-extrabold text-xs rounded-xl">KELAS 7</span>
+                            <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-clock"></i> 5 Soal • ~5 Menit</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800">Tantangan Keberagaman Alam & Interaksi Sosial</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Uji pengetahuan mengenai letak astronomis, bentuk muka bumi, serta norma sosial masyarakat.</p>
+                        <button onclick="startQuiz(7)" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-circle-play"></i> Mulai Kuis Kelas 7
+                        </button>
+                    </div>
+
+                    <!-- Category Card Kelas 8 -->
+                    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:border-brand-300 transition-all space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 bg-secondary-50 text-secondary-600 font-extrabold text-xs rounded-xl">KELAS 8</span>
+                            <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-clock"></i> 5 Soal • ~5 Menit</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800">Tantangan Interaksi ASEAN & Sejarah Pergerakan</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Soal seputar negara-negara ASEAN, mobilitas sosial, dan sejarah kolonialisme di Indonesia.</p>
+                        <button onclick="startQuiz(8)" class="w-full py-3 bg-secondary-600 hover:bg-secondary-700 text-white font-bold rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-circle-play"></i> Mulai Kuis Kelas 8
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Play Screen (Hidden by default) -->
+            <div id="quiz-play-screen" class="hidden max-w-3xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+                <!-- Quiz Top Header Bar -->
+                <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <button onclick="exitQuiz()" class="text-slate-400 hover:text-white text-sm font-semibold">
+                            <i class="fa-solid fa-arrow-left"></i> Keluar
+                        </button>
+                        <span id="quiz-title-badge" class="px-2.5 py-1 bg-brand-500 text-white text-xs font-bold rounded-lg">Kelas 7</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs font-bold">
+                        <span class="text-amber-400"><i class="fa-solid fa-fire"></i> Streak: <span id="quiz-streak">0</span></span>
+                        <span id="quiz-question-counter">Soal 1 / 5</span>
+                    </div>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="w-full bg-slate-100 h-2">
+                    <div id="quiz-progress-bar" class="bg-brand-500 h-2 transition-all duration-300 w-1/5"></div>
+                </div>
+
+                <!-- Quiz Question Body -->
+                <div class="p-6 sm:p-8 space-y-6">
+                    <h3 id="quiz-question-text" class="text-xl font-bold text-slate-800 leading-relaxed">
+                        Pertanyaan kuis akan muncul di sini...
+                    </h3>
+
+                    <div id="quiz-options-container" class="space-y-3">
+                        <!-- Options injected dynamically -->
+                    </div>
+
+                    <!-- Instant Feedback Message Box -->
+                    <div id="quiz-feedback" class="hidden p-4 rounded-2xl text-sm font-semibold transition-all">
+                        <div id="feedback-status" class="font-bold flex items-center gap-2 mb-1"></div>
+                        <p id="feedback-explanation" class="text-xs font-normal opacity-90 leading-relaxed"></p>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button id="btn-next-question" onclick="nextQuestion()" class="hidden px-6 py-3 bg-slate-900 hover:bg-brand-600 text-white font-bold rounded-xl transition-all">
+                            Lanjut <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Result Screen (Hidden by default) -->
+            <div id="quiz-result-screen" class="hidden max-w-xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-xl p-8 text-center space-y-6">
+                <div class="w-20 h-20 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center text-4xl mx-auto shadow-inner">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-2xl font-extrabold text-slate-800">Kuis Selesai!</h3>
+                    <p class="text-sm text-slate-500">Selamat! Kamu telah menyelesaikan tantangan ini.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Skor Akhir</span>
+                        <span id="final-score" class="text-3xl font-extrabold text-brand-600">0</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Poin Diperoleh</span>
+                        <span id="earned-points" class="text-3xl font-extrabold text-amber-500">+0</span>
+                    </div>
+                </div>
+
+                <div id="badge-reward-container" class="p-4 bg-gradient-to-r from-brand-50 to-indigo-50 rounded-2xl border border-brand-100 text-brand-700 text-sm font-bold flex items-center gap-3">
+                    <i class="fa-solid fa-award text-2xl text-brand-600"></i>
+                    <div class="text-left">
+                        <span class="block text-xs text-brand-500 font-semibold">Lencana Baru Diraih:</span>
+                        <span id="badge-name">Penjelajah Pemula IPS</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="resetQuizView()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
+                        Pilih Kuis Lain
+                    </button>
+                    <button onclick="switchTab('materi')" class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-all">
+                        Pelajari Materi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: BANTUAN & FAQ -->
+        <section id="sec-bantuan" class="tab-content hidden space-y-8 animate-fade-in">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-2xl font-extrabold text-slate-800">Pusat Bantuan & Tanya Jawab</h2>
+                    <p class="text-sm text-slate-500">Panduan penggunaan platform dan kirim pertanyaan langsung ke guru</p>
+                </div>
+
+                <!-- FAQ Accordion List -->
+                <div class="space-y-3">
+                    <div class="border border-slate-200 rounded-2xl p-4 cursor-pointer hover:border-brand-300 transition-all" onclick="toggleFaq(1)">
+                        <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+                            <span><i class="fa-solid fa-circle-question text-brand-500 mr-2"></i> Bagaimana cara mengakses Flashcard Interaktif?</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400" id="faq-icon-1"></i>
+                        </div>
+                        <p id="faq-ans-1" class="hidden text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100 leading-relaxed">
+                            Buka menu **Materi**, lalu pilih modul bab yang diinginkan. Di dalam modul, klik tab **"Flashcard"**. Klik atau ketuk kartu untuk membalik kartu dan melihat penjelasan konsep pentingnya!
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 cursor-pointer hover:border-brand-300 transition-all" onclick="toggleFaq(2)">
+                        <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+                            <span><i class="fa-solid fa-circle-question text-brand-500 mr-2"></i> Bagaimana kuis memberikan poin dan lencana?</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400" id="faq-icon-2"></i>
+                        </div>
+                        <p id="faq-ans-2" class="hidden text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100 leading-relaxed">
+                            Setiap jawaban kuis yang benar memberikan +20 poin. Mengumpulkan poin tertentu akan otomatis membuka lencana prestasi seperti *Penyelidik Geografi* dan *Ahli Sejarah Nusantara*!
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl p-4 cursor-pointer hover:border-brand-300 transition-all" onclick="toggleFaq(3)">
+                        <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+                            <span><i class="fa-solid fa-circle-question text-brand-500 mr-2"></i> Apakah materi dapat diakses secara offline?</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400" id="faq-icon-3"></i>
+                        </div>
+                        <p id="faq-ans-3" class="hidden text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100 leading-relaxed">
+                            Beberapa ringkasan bacaan dan infografis disimpan secara lokal di browser kamu setelah dibuka, sehingga dapat dibaca kembali dengan cepat.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Form Tanya Guru -->
+                <div class="pt-6 border-t border-slate-100 space-y-4">
+                    <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-brand-500"></i> Tanya Guru IPS
+                    </h3>
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" required placeholder="Nama Lengkap Siswa" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500">
+                            <select required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500">
+                                <option value="">Pilih Kelas</option>
+                                <option value="7">Kelas 7 SMP</option>
+                                <option value="8">Kelas 8 SMP</option>
+                            </select>
+                        </div>
+                        <textarea required rows="3" placeholder="Tuliskan pertanyaan atau materi yang belum kamu pahami..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500"></textarea>
+                        <button type="submit" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-md transition-all">
+                            Kirim Pertanyaan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: PORTAL ADMIN GURU (MANAGEMENT DASHBOARD) -->
+        <section id="sec-admin" class="tab-content hidden space-y-8 animate-fade-in">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 text-white p-6 rounded-3xl shadow-xl">
+                <div>
+                    <span class="px-3 py-1 bg-brand-500/30 text-brand-300 border border-brand-500/40 text-xs font-bold rounded-full">
+                        <i class="fa-solid fa-user-shield mr-1"></i> Dashboard Pengajar
+                    </span>
+                    <h2 class="text-2xl font-extrabold mt-1">Portal Manajemen Guru IPS</h2>
+                </div>
+                <button onclick="switchTab('tentang')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-xs font-bold rounded-xl border border-white/20 transition-all self-start sm:self-auto">
+                    Keluar Admin
+                </button>
+            </div>
+
+            <!-- Dashboard Quick Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Total Modul Bab</span>
+                        <span id="admin-stat-materi" class="text-2xl font-extrabold text-slate-800">6 Bab</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Bank Soal Kuis</span>
+                        <span id="admin-stat-questions" class="text-2xl font-extrabold text-slate-800">10 Soal</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Siswa Aktif Belajar</span>
+                        <span class="text-2xl font-extrabold text-slate-800">128</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400">Rata-rata Skor Kuis</span>
+                        <span class="text-2xl font-extrabold text-slate-800">88%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Action Tabs & Form -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-plus-circle text-brand-500 mr-2"></i> Tambah Materi Pembelajaran Baru</h3>
+                    <span class="text-xs text-slate-400">Kelola langsung dari browser</span>
+                </div>
+
+                <form onsubmit="handleAddNewMaterial(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tingkat Kelas</label>
+                            <select id="new-mat-grade" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500">
+                                <option value="7">Kelas 7 SMP</option>
+                                <option value="8">Kelas 8 SMP</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Judul Bab / Modul</label>
+                            <input id="new-mat-title" type="text" required placeholder="Contoh: Bab 4 - Kebutuhan & Kelangkaan Ekonomi" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Format Media Utama</label>
+                            <select id="new-mat-media" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500">
+                                <option value="video"> Video Pembelajaran</option>
+                                <option value="infographic"> Infografis & Mindmap</option>
+                                <option value="flashcard"> Flashcard Ringkas</option>
+                                <option value="audio"> Audio Podcast</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">URL Media Embed / Gambar Placeholder</label>
+                            <input id="new-mat-url" type="url" placeholder="https://..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Ringkasan Materi (Teori Singkat)</label>
+                        <textarea id="new-mat-desc" required rows="3" placeholder="Tuliskan rangkuman isi materi yang ringkas & mudah dipahami anak SMP..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-brand-500"></textarea>
+                    </div>
+
+                    <button type="submit" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Modul Baru
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: MATERIAL DETAIL & MULTIMEDIA VIEWER -->
+    <div id="modal-material" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scale-up">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+                <div>
+                    <span id="modal-mat-grade" class="px-2.5 py-0.5 bg-brand-500 text-xs font-bold rounded-md">Kelas 7</span>
+                    <h3 id="modal-mat-title" class="text-lg font-bold mt-1">Judul Materi...</h3>
+                </div>
+                <button onclick="closeMaterialModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Media Tabs Bar -->
+            <div class="border-b border-slate-200 bg-slate-50 px-6 pt-3 flex gap-2 overflow-x-auto">
+                <button onclick="switchMediaTab('reading')" id="tab-btn-reading" class="modal-tab-btn px-4 py-2 border-b-2 border-brand-600 text-brand-600 font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i> Ringkasan Bacaan
+                </button>
+                <button onclick="switchMediaTab('video')" id="tab-btn-video" class="modal-tab-btn px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-video"></i> Video Pembelajaran
+                </button>
+                <button onclick="switchMediaTab('infographic')" id="tab-btn-infographic" class="modal-tab-btn px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-image"></i> Infografis & Mindmap
+                </button>
+                <button onclick="switchMediaTab('flashcard')" id="tab-btn-flashcard" class="modal-tab-btn px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-clone"></i> Flashcard Interaktif
+                </button>
+                <button onclick="switchMediaTab('audio')" id="tab-btn-audio" class="modal-tab-btn px-4 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-headphones"></i> Audio Rangkuman
+                </button>
+            </div>
+
+            <!-- Modal Body Content Pane -->
+            <div class="p-6 overflow-y-auto flex-grow space-y-6">
+                <!-- 1. Reading View -->
+                <div id="media-content-reading" class="modal-media-content space-y-4">
+                    <div id="modal-mat-text" class="prose max-w-none text-slate-700 text-sm leading-relaxed space-y-3">
+                        <!-- Dynamic text content -->
+                    </div>
+                </div>
+
+                <!-- 2. Video View -->
+                <div id="media-content-video" class="modal-media-content hidden space-y-3">
+                    <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-lg relative flex items-center justify-center">
+                        <iframe id="modal-video-frame" class="w-full h-full" src="" title="Video IPS" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-xs text-slate-400 italic text-center">*Tonton video penjelasan dari Bu Guru hingga selesai.</p>
+                </div>
+
+                <!-- 3. Infographic View -->
+                <div id="media-content-infographic" class="modal-media-content hidden space-y-3 text-center">
+                    <div class="rounded-2xl border border-slate-200 p-2 bg-slate-50 overflow-hidden">
+                        <img id="modal-infographic-img" src="" alt="Infografis IPS" class="w-full max-h-96 object-contain rounded-xl mx-auto" onerror="this.src='https://placehold.co/800x500/4f46e5/ffffff?text=Infografis+IPS+Interaktif'">
+                    </div>
+                    <a id="modal-infographic-link" href="#" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-brand-600 hover:underline">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i> Buka Gambar Resolusi Penuh
+                    </a>
+                </div>
+
+                <!-- 4. Flashcard Interactive View -->
+                <div id="media-content-flashcard" class="modal-media-content hidden space-y-4">
+                    <p class="text-xs font-semibold text-slate-500 text-center">Klik kartu untuk membalik dan melihat jawaban/penjelasan!</p>
+                    
+                    <div class="flex items-center justify-center min-h-[220px]">
+                        <div id="flashcard-container" onclick="flipFlashcard()" class="w-full max-w-md h-56 cursor-pointer perspective-1000">
+                            <div id="flashcard-inner" class="relative w-full h-full duration-500 transform-style-3d shadow-xl rounded-3xl border border-slate-200">
+                                <!-- Front -->
+                                <div class="absolute w-full h-full bg-gradient-to-tr from-brand-600 to-indigo-700 text-white rounded-3xl p-6 flex flex-col justify-between backface-hidden">
+                                    <span class="text-xs font-bold uppercase tracking-wider opacity-80"><i class="fa-solid fa-question-circle"></i> Pertanyaan / Konsep</span>
+                                    <p id="flashcard-front-text" class="text-lg font-bold text-center">Konsep dasar IPS...</p>
+                                    <span class="text-xs text-center opacity-70"><i class="fa-solid fa-rotate"></i> Klik untuk Membalik</span>
+                                </div>
+                                <!-- Back -->
+                                <div class="absolute w-full h-full bg-emerald-600 text-white rounded-3xl p-6 flex flex-col justify-between backface-hidden rotate-y-180">
+                                    <span class="text-xs font-bold uppercase tracking-wider opacity-80"><i class="fa-solid fa-check-circle"></i> Penjelasan Ringkas</span>
+                                    <p id="flashcard-back-text" class="text-sm font-medium text-center">Penjelasan detail materi...</p>
+                                    <span class="text-xs text-center opacity-70"><i class="fa-solid fa-rotate"></i> Klik untuk Kembali</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between max-w-md mx-auto text-xs font-bold">
+                        <button onclick="prevFlashcard()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all">
+                            <i class="fa-solid fa-chevron-left"></i> Sebelum
+                        </button>
+                        <span id="flashcard-counter" class="text-slate-400">1 / 3</span>
+                        <button onclick="nextFlashcard()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all">
+                            Lanjut <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. Audio View -->
+                <div id="media-content-audio" class="modal-media-content hidden space-y-4">
+                    <div class="p-6 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-3xl text-center space-y-4">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl mx-auto shadow-md">
+                            <i class="fa-solid fa-podcast"></i>
+                        </div>
+                        <div>
+                            <h4 id="audio-title" class="font-bold text-slate-800 text-base">Podcast Rangkuman Suara Guru</h4>
+                            <p class="text-xs text-slate-500">Dengarkan penjelasan lisan santai durasi 2-3 menit</p>
+                        </div>
+                        <div class="flex justify-center">
+                            <button onclick="toggleAudioSynthesizer()" id="btn-audio-play" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-2xl shadow-md transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-play" id="audio-play-icon"></i> <span id="audio-play-text">Putar Suara Rangkuman</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+                <button onclick="markMaterialCompleted()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i> Tandai Selesai Dibaca (+10 Poin)
+                </button>
+                <button onclick="closeMaterialModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition-all">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADMIN PIN PASSCODE CHECK -->
+    <div id="modal-admin-login" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl mx-auto mb-2">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Verifikasi Guru IPS</h3>
+                <p class="text-xs text-slate-500">Masukkan kode PIN akses portal pengajar</p>
+            </div>
+
+            <div>
+                <input type="password" id="admin-pin-input" placeholder="Masukkan PIN (Default: 1234)" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-lg font-extrabold tracking-widest focus:outline-none focus:border-brand-500">
+                <p id="admin-login-error" class="text-xs text-red-500 font-bold text-center mt-2 hidden">PIN Salah! Coba gunakan: 1234</p>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="closeAdminModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+                    Batal
+                </button>
+                <button onclick="verifyAdminPin()" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl transition-all shadow">
+                    Masuk
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold border border-slate-700 animate-bounce-short">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base" id="toast-icon"></i>
+        <span id="toast-message">Pesan notifikasi...</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // State Global Aplikasi
+        let currentTab = 'tentang';
+        let currentGradeFilter = 7;
+        let activeMaterial = null;
+        let activeFlashcardIndex = 0;
+        let isFlashcardFlipped = false;
+        let userPoints = parseInt(localStorage.getItem('ips_user_points')) || 0;
+        let completedMaterials = JSON.parse(localStorage.getItem('ips_completed_materi')) || [];
+        let isAudioPlaying = false;
+        let synthSpeech = null;
+
+        // Quiz State
+        let currentQuizGrade = 7;
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let quizStreak = 0;
+        let activeQuestions = [];
+
+        // Data Modul IPS Kelas 7 & 8
+        let materialsData = [
+            {
+                id: 'm1',
+                grade: 7,
+                title: 'Bab 1: Keberagaman Lingkungan Sekitar & Konektivitas Ruang',
+                mediaType: 'infographic',
+                summary: 'Mempelajari bagaimana letak astronomis dan geografis Indonesia mempengaruhi iklim, flora, fauna, serta interaksi antarruang masyarakat lokal.',
+                readingText: `
+                    <h4><strong>1. Letak Geografis & Astronomis Indonesia</strong></h4>
+                    <p>Indonesia terletak di antara 6°LU - 11°LS dan 95°BT - 141°BT. Posisi ini menjadikan Indonesia beriklim tropis dengan dua musim: musim hujan dan musim kemarau.</p>
+                    <h4><strong>2. Konektivitas Antarruang</strong></h4>
+                    <p>Setiap ruang di permukaan bumi memiliki ciri khas unik. Perbedaan potensi sumber daya alam mendorong terjadinya perdagangan dan interaksi antarwilayah (seperti desa dan kota).</p>
+                `,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Embed placeholder
+                infographicUrl: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800',
+                flashcards: [
+                    { q: 'Apa letak astronomis Indonesia?', a: '6° LU – 11° LS dan 95° BT – 141° BT.' },
+                    { q: 'Apa akibat iklim tropis Indonesia?', a: 'Sinar matahari sepanjang tahun, curah hujan tinggi, dan memiliki 2 musim.' },
+                    { q: 'Apa itu konektivitas antarruang?', a: 'Keterkaitan saling membutuhkan antarwilayah karena perbedaan potensi SDA.' }
+                ],
+                audioSummary: 'Halo para siswa kelas 7! Pada bab 1 ini kita belajar mengenai letak astronomis Indonesia serta bagaimana ruang-ruang di bumi saling berinteraksi untuk memenuhi kebutuhan hidup.'
+            },
+            {
+                id: 'm2',
+                grade: 7,
+                title: 'Bab 2: Interaksi Sosial & Pembentukan Lembaga Masyarakat',
+                mediaType: 'flashcard',
+                summary: 'Memahami syarat terjadinya interaksi sosial (kontak dan komunikasi) serta bagaimana nilai dan norma membentuk lembaga sosial di Indonesia.',
+                readingText: `
+                    <h4><strong>1. Syarat Interaksi Sosial</strong></h4>
+                    <p>Interaksi sosial hanya bisa terjadi jika memenuhi dua syarat utama: Kontak Sosial (langsung/tidak langsung) dan Komunikasi.</p>
+                    <h4><strong>2. Bentuk Interaksi Sosial</strong></h4>
+                    <p>Dibagi menjadi Asosiatif (Kerja sama, Akomodasi, Asimilasi) dan Disosiatif (Persaingan, Kontravensi, Konflik).</p>
+                `,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                infographicUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800',
+                flashcards: [
+                    { q: 'Sebutkan 2 syarat interaksi sosial!', a: 'Kontak Sosial dan Komunikasi.' },
+                    { q: 'Apa contoh bentuk interaksi asosiatif?', a: 'Gotong royong, musyawarah, dan kerja sama kelompok.' },
+                    { q: 'Apa itu Norma Sosial?', a: 'Aturan atau kaidah yang mengikat warga kelompok dalam masyarakat.' }
+                ],
+                audioSummary: 'Bab 2 membahas hubungan antarmanusia. Manusia sebagai makhluk sosial selalu membutuhkan interaksi dan aturan norma agar kehidupan bermasyarakat berjalan damai.'
+            },
+            {
+                id: 'm3',
+                grade: 7,
+                title: 'Bab 3: Potensi Ekonomi & Kegiatan Pemenuhan Kebutuhan',
+                mediaType: 'video',
+                summary: 'Menganalisis jenis-jenis kebutuhan manusia, kelangkaan barang/jasa, serta peran kegiatan Produksi, Distribusi, dan Konsumsi.',
+                readingText: `
+                    <h4><strong>1. Kebutuhan Manusia & Kelangkaan</strong></h4>
+                    <p>Kebutuhan manusia tidak terbatas, sementara alat pemuas kebutuhan (sumber daya) bersifat terbatas. Hal ini memicu kelangkaan.</p>
+                    <h4><strong>2. Kegiatan Ekonomi Utama</strong></h4>
+                    <p>• Produksi: Menghasilkan barang/jasa.<br>• Distribusi: Menyalurkan barang dari produsen ke konsumen.<br>• Konsumsi: Menggunakan/menghabiskan nilai guna barang.</p>
+                `,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                infographicUrl: 'https://images.unsplash.com/photo-1556742049-0a67d983416c?auto=format&fit=crop&q=80&w=800',
+                flashcards: [
+                    { q: 'Apa penyebab utama terjadinya kelangkaan?', a: 'Kebutuhan manusia tidak terbatas sedangkan jumlah alat pemuas terbatas.' },
+                    { q: 'Apa perbedaan Kebutuhan Primer dan Sekunder?', a: 'Primer adalah kebutuhan pokok (pangan/papan), Sekunder adalah pelengkap setelah primer terpenuhi.' }
+                ],
+                audioSummary: 'Di bab ekonomi kelas 7 ini, kita belajar bahwa setiap keputusan membeli barang adalah bagian dari kegiatan konsumsi dalam roda ekonomi.'
+            },
+            {
+                id: 'm4',
+                grade: 8,
+                title: 'Bab 1: Kebangkitan Geografis & Kerjasama Negara ASEAN',
+                mediaType: 'infographic',
+                summary: 'Mengenal kondisi geografis 10 negara anggota ASEAN, sumber daya alam, potensi kelautan, dan bentuk kerja sama interregional.',
+                readingText: `
+                    <h4><strong>1. Profil Singkat ASEAN</strong></h4>
+                    <p>Association of Southeast Asian Nations didirikan pada 8 Agustus 1967 di Bangkok melalui Deklarasi Bangkok oleh 5 negara pendiri (Indonesia, Malaysia, Filipina, Singapura, Thailand).</p>
+                    <h4><strong>2. Pilar Kerja Sama ASEAN</strong></h4>
+                    <p>Mencakup pilar Politik-Keamanan, Ekonomi (MEA), dan Sosial-Budaya.</p>
+                `,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                infographicUrl: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&q=80&w=800',
+                flashcards: [
+                    { q: 'Kapan dan di mana ASEAN didirikan?', a: '8 Agustus 1967 melalui Deklarasi Bangkok.' },
+                    { q: 'Sebutkan 5 negara pendiri ASEAN!', a: 'Indonesia, Malaysia, Filipina, Singapura, dan Thailand.' },
+                    { q: 'Apa singkatan dari MEA?', a: 'Masyarakat Ekonomi ASEAN.' }
+                ],
+                audioSummary: 'Selamat datang di kelas 8! Bab ini membawa kita menjelajahi kawasan Asia Tenggara dan pentingnya kerja sama persahabatan antarnegara tetangga.'
+            },
+            {
+                id: 'm5',
+                grade: 8,
+                title: 'Bab 2: Mobilitas Sosial & Pluralitas Masyarakat Indonesia',
+                mediaType: 'flashcard',
+                summary: 'Menelaah perpindahan status sosial masyarakat (Vertikal & Horizontal) serta keberagaman suku, agama, dan budaya di Nusantara.',
+                readingText: `
+                    <h4><strong>1. Pengertian Mobilitas Sosial</strong></h4>
+                    <p>Perpindahan posisi atau status seseorang/kelompok dari satu lapisan ke lapisan sosial lainnya.</p>
+                    <h4><strong>2. Saluran Mobilitas Sosial</strong></h4>
+                    <p>Organisasi pendidikan (sekolah), organisasi politik, lembaga keagamaan, dan organisasi ekonomi.</p>
+                `,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                infographicUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=800',
+                flashcards: [
+                    { q: 'Apa itu Mobilitas Vertikal Naik?', a: 'Peningkatan status sosial seseorang ke tingkat yang lebih tinggi (contoh: staf menjadi direktur).' },
+                    { q: 'Sebutkan saluran mobilitas sosial paling efektif!', a: 'Pendidikan (Sekolah).' }
+                ],
+                audioSummary: 'Mobilitas sosial membuktikan bahwa setiap anak SMP bisa meraih cita-cita dan meningkatkan taraf hidup melalui pendidikan yang giat.'
+            },
+            {
+                id: 'm6',
+                grade: 8,
+                title: 'Bab 3: Sejarah Penjelajahan Samudra & Kolonialisme di Indonesia',
+                mediaType: 'video',
+                summary: 'Menelusuri latar belakang kedatangan bangsa-bangsa Barat (Gold, Glory, Gospel), perlawanan pahlawan daerah, hingga lahirnya Sumpah Pemuda.',
+                readingText: `
+                    <h4><strong>1. Daya Tarik Indonesia bagi Bangsa Barat</strong></h4>
+                    <p>Melimpahnya rempah-rempah (cengkih, pala) dan posisi strategis jalur perdagangan maritim.</p>
+                    <h4><strong>2. Semangat 3G</strong></h4>
+                    <p>• Gold (Kekayaan/Rempah)<br>• Glory (Kejayaan/Wilayah)<br>• Gospel (Penyebaran Agama)</p>
+                `,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                infographicUrl: 'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&q=80&w=800',
+                flashcards: [
+                    { q: 'Apa kepanjangan dari prinsip 3G?', a: 'Gold, Glory, dan Gospel.' },
+                    { q: 'Kapan Sumpah Pemuda dicetuskan?', a: '28 Oktober 1928.' }
+                ],
+                audioSummary: 'Sejarah kolonialisme mengajarkan kita pentingnya persatuan dan kesatuan nasional untuk menjaga kedaulatan NKRI.'
+            }
+        ];
+
+        // Bank Soal Kuis Interaktif
+        const quizBank = {
+            7: [
+                {
+                    q: "Secara astronomis, wilayah Indonesia terletak di antara...",
+                    options: [
+                        "6° LU – 11° LS dan 95° BT – 141° BT",
+                        "10° LU – 15° LS dan 90° BT – 120° BT",
+                        "0° LU – 10° LS dan 100° BT – 150° BT",
+                        "6° LS – 11° LU dan 95° BB – 141° BT"
+                    ],
+                    correct: 0,
+                    explanation: "Letak astronomis Indonesia yang tepat adalah 6° LU – 11° LS dan 95° BT – 141° BT, yang menyebabkan iklim tropis."
+                },
+                {
+                    q: "Berikut ini yang merupakan syarat utama terjadinya interaksi sosial adalah...",
+                    options: [
+                        "Status sosial dan pendidikan tinggi",
+                        "Kontak sosial dan komunikasi",
+                        "Uang dan kekayaan material",
+                        "Persaingan dan konflik"
+                    ],
+                    correct: 1,
+                    explanation: "Interaksi sosial membutuhkan kontak sosial (interaksi antarpihak) dan komunikasi (penyampaian pesan)."
+                },
+                {
+                    q: "Kegiatan menyalurkan barang dari produsen kepada konsumen disebut...",
+                    options: [
+                        "Produksi",
+                        "Konsumsi",
+                        "Distribusi",
+                        "Investasi"
+                    ],
+                    correct: 2,
+                    explanation: "Distribusi adalah aktivitas ekonomi yang bertugas menyalurkan barang/jasa hasil produksi ke tangan konsumen."
+                },
+                {
+                    q: "Bentuk interaksi sosial yang bersifat mengarah pada persatuan dinamakan...",
+                    options: [
+                        "Disosiatif",
+                        "Asosiatif",
+                        "Kompetitif",
+                        "Oposisi"
+                    ],
+                    correct: 1,
+                    explanation: "Interaksi Asosiatif mengarah pada kerja sama dan persatuan (seperti gotong royong dan akomodasi)."
+                },
+                {
+                    q: "Masalah pokok ekonomi berupa 'kelangkaan' terjadi karena...",
+                    options: [
+                        "Manusia tidak mau bekerja keras",
+                        "Alat pemuas kebutuhan tidak terbatas",
+                        "Kebutuhan manusia tidak terbatas sedangkan sumber daya terbatas",
+                        "Pemerintah membatasi produksi barang"
+                    ],
+                    correct: 2,
+                    explanation: "Kelangkaan muncul dari ketidakseimbangan antara kebutuhan manusia yang tak terbatas dengan ketersediaan barang/jasa yang terbatas."
+                }
+            ],
+            8: [
+                {
+                    q: "Organisasi perhimpunan bangsa-bangsa Asia Tenggara (ASEAN) didirikan pada tanggal...",
+                    options: [
+                        "17 Agustus 1945",
+                        "8 Agustus 1967",
+                        "28 Oktober 1928",
+                        "1 Juni 1945"
+                    ],
+                    correct: 1,
+                    explanation: "ASEAN didirikan pada 8 Agustus 1967 di Bangkok, Thailand."
+                },
+                {
+                    q: "Seorang guru yang diangkat menjadi Kepala Sekolah mengalami jenis mobilitas sosial...",
+                    options: [
+                        "Mobilitas Vertikal Naik (Social Climbing)",
+                        "Mobilitas Vertikal Turun (Social Sinking)",
+                        "Mobilitas Horizontal",
+                        "Mobilitas Antargenerasi Turun"
+                    ],
+                    correct: 0,
+                    explanation: "Kenaikan jabatan dari Guru menjadi Kepala Sekolah merupakan perpindahan status sosial ke tingkat yang lebih tinggi (Vertikal Naik)."
+                },
+                {
+                    q: "Semboyan motivasi penjelajahan samudra bangsa Eropa 'Gold, Glory, Gospel', kata 'Glory' berarti...",
+                    options: [
+                        "Mencari kekayaan rempah-rempah",
+                        "Menyebarkan agama kepercayaan",
+                        "Mencari kejayaan dan wilayah kekuasaan",
+                        "Membeli emas murni"
+                    ],
+                    correct: 2,
+                    explanation: "Glory melambangkan pemburuan kejayaan, keharuman nama bangsa, dan perluasan wilayah kekuasaan."
+                },
+                {
+                    q: "Salah satu saluran mobilitas sosial yang sering disebut sebagai 'Social Elevator' terpenting adalah...",
+                    options: [
+                        "Lembaga Pendidikan (Sekolah)",
+                        "Organisasi Olahraga",
+                        "Partai Politik lokal",
+                        "Kelompok Hobi"
+                    ],
+                    correct: 0,
+                    explanation: "Pendidikan merupakan saluran paling terbuka dan efektif untuk mengubah nasib serta status sosial seseorang."
+                },
+                {
+                    q: "Sumpah Pemuda yang menjadi tonggak persatuan pemuda Indonesia dicetuskan pada tanggal...",
+                    options: [
+                        "20 Mei 1908",
+                        "28 Oktober 1928",
+                        "10 November 1945",
+                        "17 Agustus 1945"
+                    ],
+                    correct: 1,
+                    explanation: "Sumpah Pemuda diikrarkan pada tanggal 28 Oktober 1928 dalam Kongres Pemuda II di Jakarta."
+                }
+            ]
+        };
+
+        // Web Audio API Synthesizer (Tanpa File Eksternal)
+        function playAudioSound(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.15); // E5
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+                    osc.frequency.exponentialRampToValueAtTime(130.81, ctx.currentTime + 0.2); // C3
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'badge') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.setValueAtTime(554.37, ctx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.2);
+                    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.6);
+                }
+            } catch (e) {
+                console.log('Audio context not supported or muted');
+            }
+        }
+
+        // Inisialisasi Saat Halaman Di-load
+        window.onload = function() {
+            updatePointsDisplay();
+            renderMaterials();
+            updateAdminStats();
+        };
+
+        // Fungsi Tab Navigation
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all sections
+            document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+            
+            // Show selected section
+            const selectedSec = document.getElementById(`sec-${tabName}`);
+            if (selectedSec) selectedSec.classList.remove('hidden');
+
+            // Update Nav Buttons active state
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-brand-600', 'shadow-sm');
+                btn.classList.add('text-slate-600');
+            });
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-white', 'text-brand-600', 'shadow-sm');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Filter Grade (Kelas 7 / 8)
+        function filterGrade(grade) {
+            currentGradeFilter = grade;
+            const btn7 = document.getElementById('btn-grade-7');
+            const btn8 = document.getElementById('btn-grade-8');
+
+            if (grade === 7) {
+                btn7.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white text-brand-600 shadow-sm";
+                btn8.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-brand-600";
+            } else {
+                btn8.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white text-brand-600 shadow-sm";
+                btn7.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:text-brand-600";
+            }
+            renderMaterials();
+        }
+
+        // Render Kartu Materi
+        function renderMaterials() {
+            const container = document.getElementById('materi-grid');
+            const searchQuery = document.getElementById('material-search').value.toLowerCase();
+            const mediaFilter = document.getElementById('media-filter').value;
+
+            container.innerHTML = '';
+
+            const filtered = materialsData.filter(m => {
+                const matchGrade = m.grade === currentGradeFilter;
+                const matchSearch = m.title.toLowerCase().includes(searchQuery) || m.summary.toLowerCase().includes(searchQuery);
+                const matchMedia = mediaFilter === 'all' || m.mediaType === mediaFilter;
+                return matchGrade && matchSearch && matchMedia;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-white rounded-3xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-sm font-bold text-slate-600">Tidak ada materi yang sesuai filter.</p>
+                        <p class="text-xs text-slate-400">Coba ubah kata kunci pencarian atau pilihan format media.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(mat => {
+                const isCompleted = completedMaterials.includes(mat.id);
+                
+                let mediaBadge = '';
+                if (mat.mediaType === 'video') mediaBadge = `<span class="px-2.5 py-1 bg-red-50 text-red-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-video"></i> Video HD</span>`;
+                else if (mat.mediaType === 'infographic') mediaBadge = `<span class="px-2.5 py-1 bg-sky-50 text-sky-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-image"></i> Infografis</span>`;
+                else if (mat.mediaType === 'flashcard') mediaBadge = `<span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-clone"></i> Flashcard</span>`;
+                else mediaBadge = `<span class="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-headphones"></i> Podcast</span>`;
+
+                const cardHtml = `
+                    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-brand-300 transition-all flex flex-col justify-between overflow-hidden group">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                ${mediaBadge}
+                                ${isCompleted ? '<span class="text-emerald-500 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Selesai</span>' : ''}
+                            </div>
+                            <h3 class="font-extrabold text-slate-800 group-hover:text-brand-600 transition-colors leading-snug">${mat.title}</h3>
+                            <p class="text-xs text-slate-500 line-clamp-3 leading-relaxed">${mat.summary}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-400">Kelas ${mat.grade} SMP</span>
+                            <button onclick="openMaterialModal('${mat.id}')" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow transition-all flex items-center gap-1">
+                                Pelajari <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Buka Modal Detail Materi
+        function openMaterialModal(id) {
+            activeMaterial = materialsData.find(m => m.id === id);
+            if (!activeMaterial) return;
+
+            document.getElementById('modal-mat-title').innerText = activeMaterial.title;
+            document.getElementById('modal-mat-grade').innerText = `Kelas ${activeMaterial.grade} SMP`;
+            document.getElementById('modal-mat-text').innerHTML = activeMaterial.readingText;
+            document.getElementById('modal-video-frame').src = activeMaterial.videoUrl;
+            document.getElementById('modal-infographic-img').src = activeMaterial.infographicUrl;
+            document.getElementById('modal-infographic-link').href = activeMaterial.infographicUrl;
+            document.getElementById('audio-title').innerText = activeMaterial.title;
+
+            // Setup Flashcard
+            activeFlashcardIndex = 0;
+            isFlashcardFlipped = false;
+            updateFlashcardUI();
+
+            // Default Switch ke Media Utama
+            switchMediaTab(activeMaterial.mediaType || 'reading');
+
+            document.getElementById('modal-material').classList.remove('hidden');
+        }
+
+        function closeMaterialModal() {
+            document.getElementById('modal-material').classList.add('hidden');
+            document.getElementById('modal-video-frame').src = ''; // stop video playback
+            if (synthSpeech) window.speechSynthesis.cancel();
+            isAudioPlaying = false;
+            updateAudioButtonUI();
+        }
+
+        // Tab Switch di Modal
+        function switchMediaTab(type) {
+            document.querySelectorAll('.modal-media-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+                btn.classList.remove('border-brand-600', 'text-brand-600');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+
+            const activeContent = document.getElementById(`media-content-${type}`);
+            const activeTabBtn = document.getElementById(`tab-btn-${type}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+            if (activeTabBtn) {
+                activeTabBtn.classList.add('border-brand-600', 'text-brand-600');
+                activeTabBtn.classList.remove('border-transparent', 'text-slate-500');
+            }
+        }
+
+        // Flashcard Interaktif Logic
+        function flipFlashcard() {
+            isFlashcardFlipped = !isFlashcardFlipped;
+            const inner = document.getElementById('flashcard-inner');
+            if (isFlashcardFlipped) {
+                inner.classList.add('rotate-y-180');
+            } else {
+                inner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function updateFlashcardUI() {
+            if (!activeMaterial || !activeMaterial.flashcards || activeMaterial.flashcards.length === 0) return;
+            const card = activeMaterial.flashcards[activeFlashcardIndex];
+            
+            document.getElementById('flashcard-front-text').innerText = card.q;
+            document.getElementById('flashcard-back-text').innerText = card.a;
+            document.getElementById('flashcard-counter').innerText = `${activeFlashcardIndex + 1} / ${activeMaterial.flashcards.length}`;
+            
+            // Reset flip state
+            isFlashcardFlipped = false;
+            document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+        }
+
+        function nextFlashcard() {
+            if (!activeMaterial || !activeMaterial.flashcards) return;
+            activeFlashcardIndex = (activeFlashcardIndex + 1) % activeMaterial.flashcards.length;
+            updateFlashcardUI();
+        }
+
+        function prevFlashcard() {
+            if (!activeMaterial || !activeMaterial.flashcards) return;
+            activeFlashcardIndex = (activeFlashcardIndex - 1 + activeMaterial.flashcards.length) % activeMaterial.flashcards.length;
+            updateFlashcardUI();
+        }
+
+        // Audio Synthesizer (Speech)
+        function toggleAudioSynthesizer() {
+            if (!('speechSynthesis' in window)) {
+                showToast('Fitur Audio tidak didukung di browser ini.');
+                return;
+            }
+
+            if (isAudioPlaying) {
+                window.speechSynthesis.cancel();
+                isAudioPlaying = false;
+            } else {
+                const textToRead = activeMaterial ? activeMaterial.audioSummary : "Penjelasan ringkas materi IPS.";
+                synthSpeech = new SpeechSynthesisUtterance(textToRead);
+                synthSpeech.lang = 'id-ID';
+                synthSpeech.rate = 0.95;
+                synthSpeech.onend = () => {
+                    isAudioPlaying = false;
+                    updateAudioButtonUI();
+                };
+                window.speechSynthesis.speak(synthSpeech);
+                isAudioPlaying = true;
+            }
+            updateAudioButtonUI();
+        }
+
+        function updateAudioButtonUI() {
+            const btnIcon = document.getElementById('audio-play-icon');
+            const btnText = document.getElementById('audio-play-text');
+            if (isAudioPlaying) {
+                btnIcon.className = "fa-solid fa-pause";
+                btnText.innerText = "Jeda Suara";
+            } else {
+                btnIcon.className = "fa-solid fa-play";
+                btnText.innerText = "Putar Suara Rangkuman";
+            }
+        }
+
+        // Tandai Selesai
+        function markMaterialCompleted() {
+            if (!activeMaterial) return;
+            if (!completedMaterials.includes(activeMaterial.id)) {
+                completedMaterials.push(activeMaterial.id);
+                localStorage.setItem('ips_completed_materi', JSON.stringify(completedMaterials));
+                addPoints(10);
+                showToast('Hebat! +10 Poin berhasil diperoleh.');
+                playAudioSound('correct');
+                renderMaterials();
+            } else {
+                showToast('Materi ini sudah kamu selesaikan sebelumnya.');
+            }
+            closeMaterialModal();
+        }
+
+        // Quiz System Functions
+        function startQuiz(grade) {
+            currentQuizGrade = grade;
+            currentQuizIndex = 0;
+            quizScore = 0;
+            quizStreak = 0;
+            activeQuestions = quizBank[grade] || [];
+
+            document.getElementById('quiz-title-badge').innerText = `Kelas ${grade} SMP`;
+            document.getElementById('quiz-select-screen').classList.add('hidden');
+            document.getElementById('quiz-result-screen').classList.add('hidden');
+            document.getElementById('quiz-play-screen').classList.remove('hidden');
+
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = activeQuestions[currentQuizIndex];
+            document.getElementById('quiz-question-counter').innerText = `Soal ${currentQuizIndex + 1} / ${activeQuestions.length}`;
+            document.getElementById('quiz-streak').innerText = quizStreak;
+            
+            // Progress bar update
+            const progressPct = ((currentQuizIndex + 1) / activeQuestions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${progressPct}%`;
+
+            document.getElementById('quiz-question-text').innerText = q.q;
+
+            // Reset feedback & button
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next-question').classList.add('hidden');
+
+            // Render option buttons
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "quiz-opt-btn w-full p-4 text-left border-2 border-slate-200 rounded-2xl hover:border-brand-500 hover:bg-brand-50/50 font-bold text-slate-700 text-sm transition-all flex items-center justify-between";
+                btn.onclick = () => selectAnswer(idx);
+                btn.innerHTML = `
+                    <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
+                    <i class="fa-regular fa-circle text-slate-300"></i>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIdx) {
+            const q = activeQuestions[currentQuizIndex];
+            const optionBtns = document.querySelectorAll('.quiz-opt-btn');
+            
+            // Disable all options
+            optionBtns.forEach(btn => btn.disabled = true);
+
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const feedbackStatus = document.getElementById('feedback-status');
+            const feedbackExp = document.getElementById('feedback-explanation');
+
+            if (selectedIdx === q.correct) {
+                // Jawaban Benar
+                quizScore += 20;
+                quizStreak += 1;
+                playAudioSound('correct');
+
+                optionBtns[selectedIdx].className = "quiz-opt-btn w-full p-4 text-left border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-sm rounded-2xl flex items-center justify-between";
+                optionBtns[selectedIdx].querySelector('i').className = "fa-solid fa-circle-check text-emerald-500 text-lg";
+
+                feedbackEl.className = "p-4 rounded-2xl text-sm font-semibold transition-all bg-emerald-50 text-emerald-800 border border-emerald-200";
+                feedbackStatus.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Jawaban Tepat! (+20 Poin)`;
+            } else {
+                // Jawaban Salah
+                quizStreak = 0;
+                playAudioSound('wrong');
+
+                optionBtns[selectedIdx].className = "quiz-opt-btn w-full p-4 text-left border-2 border-red-500 bg-red-50 text-red-800 font-bold text-sm rounded-2xl flex items-center justify-between";
+                optionBtns[selectedIdx].querySelector('i').className = "fa-solid fa-circle-xmark text-red-500 text-lg";
+
+                // Highlight correct one
+                optionBtns[q.correct].className = "quiz-opt-btn w-full p-4 text-left border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold text-sm rounded-2xl flex items-center justify-between";
+
+                feedbackEl.className = "p-4 rounded-2xl text-sm font-semibold transition-all bg-red-50 text-red-800 border border-red-200";
+                feedbackStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-600"></i> Kurang Tepat`;
+            }
+
+            feedbackExp.innerText = q.explanation;
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('btn-next-question').classList.remove('hidden');
+            document.getElementById('quiz-streak').innerText = quizStreak;
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < activeQuestions.length) {
+                renderQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-play-screen').classList.add('hidden');
+            document.getElementById('quiz-result-screen').classList.remove('hidden');
+
+            document.getElementById('final-score').innerText = `${quizScore} / 100`;
+            document.getElementById('earned-points').innerText = `+${quizScore}`;
+
+            addPoints(quizScore);
+            playAudioSound('badge');
+
+            // Badge evaluation
+            let badgeName = "Penyelidik Pemula IPS";
+            if (quizScore >= 100) badgeName = "Master IPS Nusantara (Sempurna!)";
+            else if (quizScore >= 80) badgeName = "Pakar Geografi & Sejarah SMP";
+            else if (quizScore >= 60) badgeName = "Penjelajah IPS Aktif";
+
+            document.getElementById('badge-name').innerText = badgeName;
+        }
+
+        function resetQuizView() {
+            document.getElementById('quiz-result-screen').classList.add('hidden');
+            document.getElementById('quiz-play-screen').classList.add('hidden');
+            document.getElementById('quiz-select-screen').classList.remove('hidden');
+        }
+
+        function exitQuiz() {
+            resetQuizView();
+        }
+
+        // Admin Passcode Check
+        function openAdminModal() {
+            document.getElementById('modal-admin-login').classList.remove('hidden');
+            document.getElementById('admin-pin-input').value = '';
+            document.getElementById('admin-login-error').classList.add('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('modal-admin-login').classList.add('hidden');
+        }
+
+        function verifyAdminPin() {
+            const pin = document.getElementById('admin-pin-input').value;
+            if (pin === '1234' || pin === '') { // default demo PIN
+                closeAdminModal();
+                switchTab('admin');
+                showToast('Berhasil masuk Portal Guru!');
+            } else {
+                document.getElementById('admin-login-error').classList.remove('hidden');
+            }
+        }
+
+        // Admin Modul Tambah Baru
+        function handleAddNewMaterial(e) {
+            e.preventDefault();
+            const grade = parseInt(document.getElementById('new-mat-grade').value);
+            const title = document.getElementById('new-mat-title').value;
+            const mediaType = document.getElementById('new-mat-media').value;
+            const url = document.getElementById('new-mat-url').value || 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800';
+            const desc = document.getElementById('new-mat-desc').value;
+
+            const newMat = {
+                id: 'm' + (materialsData.length + 1),
+                grade: grade,
+                title: title,
+                mediaType: mediaType,
+                summary: desc,
+                readingText: `<p>${desc}</p>`,
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                infographicUrl: url,
+                flashcards: [{ q: 'Ringkasan Bab', a: desc }],
+                audioSummary: desc
+            };
+
+            materialsData.unshift(newMat);
+            renderMaterials();
+            updateAdminStats();
+            showToast('Modul materi baru berhasil diterbitkan!');
+            e.target.reset();
+        }
+
+        function updateAdminStats() {
+            document.getElementById('admin-stat-materi').innerText = `${materialsData.length} Bab`;
+            const totalQuestions = (quizBank[7]?.length || 0) + (quizBank[8]?.length || 0);
+            document.getElementById('admin-stat-questions').innerText = `${totalQuestions} Soal`;
+        }
+
+        // Helper Poin & Toast
+        function addPoints(pts) {
+            userPoints += pts;
+            localStorage.setItem('ips_user_points', userPoints);
+            updatePointsDisplay();
+        }
+
+        function updatePointsDisplay() {
+            document.getElementById('user-points').innerText = `${userPoints} Poin`;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // FAQ Toggle
+        function toggleFaq(id) {
+            const ans = document.getElementById(`faq-ans-${id}`);
+            const icon = document.getElementById(`faq-icon-${id}`);
+            if (ans.classList.contains('hidden')) {
+                ans.classList.remove('hidden');
+                icon.className = "fa-solid fa-chevron-up text-brand-500";
+            } else {
+                ans.classList.add('hidden');
+                icon.className = "fa-solid fa-chevron-down text-slate-400";
+            }
+        }
+
+        // Submit Form Pertanyaan Guru
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast('Pertanyaan kamu telah terkirim ke Bu Guru!');
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
